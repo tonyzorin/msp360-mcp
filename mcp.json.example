@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "MSP360": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e", "MSP360_API_LOGIN=<YOUR_API_LOGIN>",
+        "-e", "MSP360_API_PASSWORD=<YOUR_API_PASSWORD>",
+        "-e", "API_TIMEOUT=60",
+        "tonyzorin/msp360-mcp:latest",
+      ]
+    }
+  }
+} 
