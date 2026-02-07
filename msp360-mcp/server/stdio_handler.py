@@ -41,55 +41,83 @@ async def handle_stdio_mode_async():
     
     # Main STDIO loop
     logger.info("Entering main STDIO loop")
-    
-    while True:
-        try:
-            # Read from stdin
-            logger.info("Waiting for line from stdin...")
-            line = sys.stdin.readline()
-            
-            if not line:
-                logger.warning("Stdin closed (EOF received). Exiting STDIO loop.")
-                break
-            
-            # Log what was read
-            logger.info(f"Read line from stdin: {line.strip()}")
-                
-            # Parse the JSON request
+
+    try:
+        while True:
             try:
-                request = json.loads(line)
-            except json.JSONDecodeError as e:
-                logger.error(f"Failed to parse JSON from stdin: {e}")
-                error_response = {
-                    "jsonrpc": "2.0",
-                    "id": None,
-                    "error": {
-                        "code": -32700,
-                        "message": f"Parse error: {str(e)}"
+                # Read from stdin
+                logger.info("Waiting for line from stdin...")
+                line = sys.stdin.readline()
+
+                if not line:
+                    logger.warning("Stdin closed (EOF received). Exiting STDIO loop.")
+                    break
+
+                # Log what was read
+                logger.info(f"Read line from stdin: {line.strip()}")
+
+                # Parse the JSON request
+                try:
+                    request = json.loads(line)
+                except json.JSONDecodeError as e:
+                    logger.error(f"Failed to parse JSON from stdin: {e}")
+                    error_response = {
+                        "jsonrpc": "2.0",
+                        "id": None,
+                        "error": {
+                            "code": -32700,
+                            "message": f"Parse error: {str(e)}"
+                        }
                     }
-                }
-                sys.stdout.write(json.dumps(error_response) + "\n")
-                sys.stdout.flush()
-                continue
-                
-            # Special case for notifications (no response needed)
-            if request.get("method", "").startswith("notifications/"):
-                notification_type = request.get("method").split("/")[1]
-                logger.info(f"Received notification: {notification_type}")
-                
-                # Handle specific notifications
-                if notification_type == "initialized":
-                    logger.info("Client initialized and ready for normal operations")
-                
-                # No response needed for notifications
-                continue
-                
-            response = None
-            
-            # Check for required jsonrpc version field
-            if "jsonrpc" not in request or request.get("jsonrpc") != "2.0":
-                # For compatibility with older clients, handle requests without jsonrpc field
-                if request.get("method") == "initialize":
+                    sys.stdout.write(json.dumps(error_response) + "\n")
+                    sys.stdout.flush()
+                    continue
+
+                # Special case for notifications (no response needed)
+                if request.get("method", "").startswith("notifications/"):
+                    notification_type = request.get("method").split("/")[1]
+                    logger.info(f"Received notification: {notification_type}")
+
+                    # Handle specific notifications
+                    if notification_type == "initialized":
+                        logger.info("Client initialized and ready for normal operations")
+
+                    # No response needed for notifications
+                    continue
+
+                response = None
+
+                # Check for required jsonrpc version field
+                if "jsonrpc" not in request or request.get("jsonrpc") != "2.0":
+                    # For compatibility with older clients, handle requests without jsonrpc field
+                    if request.get("method") == "initialize":
+                        # Handle initialization
+                        response = {
+                            "jsonrpc": "2.0",
+                            "id": request.get("id"),
+                            "result": {
+                                "protocolVersion": "2024-11-05",
+                                "serverInfo": {
+                                    "name": "MSP360 MCP Server",
+                                    "version": "0.1.0"
+                                },
+                                "capabilities": {
+                                    "tools": {
+                                        "listChanged": True
+                                    }
+                                }
+                            }
+                        }
+                    else:
+                        response = {
+                            "jsonrpc": "2.0",
+                            "id": request.get("id"),
+                            "error": {
+                                "code": -32600,
+                                "message": "Invalid Request: Missing or invalid jsonrpc version"
+                            }
+                        }
+                elif request.get("method") == "initialize":
                     # Handle initialization
                     response = {
                         "jsonrpc": "2.0",
@@ -107,81 +135,60 @@ async def handle_stdio_mode_async():
                             }
                         }
                     }
+                elif request.get("method") in ["getTools", "tools/list"]:
+                    # Return available tools
+                    response = {
+                        "jsonrpc": "2.0",
+                        "id": request.get("id"),
+                        "result": {"tools": mcp_server.get_tools_definition()}
+                    }
+                elif request.get("method") in ["invoke", "tools/call", "tools/invoke"]:
+                    # Invoke a tool
+                    response = await handle_tool_invocation(mcp_server, request, request.get("method"))
+                elif request.get("method") == "shutdown":
+                    # Handle shutdown
+                    response = {
+                        "jsonrpc": "2.0",
+                        "id": request.get("id"),
+                        "result": None
+                    }
+                    # Exit immediately
+                    break
                 else:
+                    # Unknown method
                     response = {
                         "jsonrpc": "2.0",
                         "id": request.get("id"),
                         "error": {
-                            "code": -32600,
-                            "message": "Invalid Request: Missing or invalid jsonrpc version"
+                            "code": -32601,
+                            "message": f"Method not found: {request.get('method')}"
                         }
                     }
-            elif request.get("method") == "initialize":
-                # Handle initialization
-                response = {
-                    "jsonrpc": "2.0",
-                    "id": request.get("id"),
-                    "result": {
-                        "protocolVersion": "2024-11-05",
-                        "serverInfo": {
-                            "name": "MSP360 MCP Server",
-                            "version": "0.1.0"
-                        },
-                        "capabilities": {
-                            "tools": {
-                                "listChanged": True
-                            }
-                        }
-                    }
-                }
-            elif request.get("method") in ["getTools", "tools/list"]:
-                # Return available tools
-                response = {
-                    "jsonrpc": "2.0",
-                    "id": request.get("id"),
-                    "result": {"tools": mcp_server.get_tools_definition()}
-                }
-            elif request.get("method") in ["invoke", "tools/call", "tools/invoke"]:
-                # Invoke a tool
-                response = await handle_tool_invocation(mcp_server, request, request.get("method"))
-            elif request.get("method") == "shutdown":
-                # Handle shutdown
-                response = {
-                    "jsonrpc": "2.0",
-                    "id": request.get("id"),
-                    "result": None
-                }
-                # Exit immediately
+
+                # Send the response
+                if response:
+                    sys.stdout.write(json.dumps(response) + "\n")
+                    sys.stdout.flush()
+
+            except (SystemExit, KeyboardInterrupt):
+                logger.info("Received termination signal during STDIO loop")
                 break
-            else:
-                # Unknown method
-                response = {
+            except Exception as e:
+                # Send an error response
+                error_response = {
                     "jsonrpc": "2.0",
-                    "id": request.get("id"),
+                    "id": request.get("id") if "request" in locals() else None,
                     "error": {
-                        "code": -32601,
-                        "message": f"Method not found: {request.get('method')}"
+                        "code": -32603,
+                        "message": f"Internal error: {str(e)}"
                     }
                 }
-            
-            # Send the response
-            if response:
-                sys.stdout.write(json.dumps(response) + "\n")
+
+                sys.stdout.write(json.dumps(error_response) + "\n")
                 sys.stdout.flush()
-                
-        except Exception as e:
-            # Send an error response
-            error_response = {
-                "jsonrpc": "2.0",
-                "id": request.get("id") if "request" in locals() else None,
-                "error": {
-                    "code": -32603,
-                    "message": f"Internal error: {str(e)}"
-                }
-            }
-            
-            sys.stdout.write(json.dumps(error_response) + "\n")
-            sys.stdout.flush()
+    finally:
+        logger.info("Cleaning up MCP server resources")
+        mcp_server.close()
 
 # For non-async environments
 def handle_stdio_mode():
