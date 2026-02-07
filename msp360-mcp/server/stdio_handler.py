@@ -76,13 +76,11 @@ async def handle_stdio_mode_async():
                     logger.warning("Stdin closed (EOF received). Exiting STDIO loop.")
                     break
 
-                # Log what was read
-                logger.info(f"Read line from stdin: {line.strip()}")
-
                 # Parse the JSON request
                 try:
                     request = json.loads(line)
                     request_id = request.get("id")
+                    logger.info(f"Received request: method={request.get('method')}, id={request_id}")
                 except json.JSONDecodeError as e:
                     logger.error(f"Failed to parse JSON from stdin: {e}")
                     error_response = {
@@ -216,7 +214,7 @@ async def handle_tool_invocation(mcp_server: MCPServer, request: Dict[str, Any],
             }
         }
 
-    logger.info(f"Invoking tool {tool_name} with parameters: {tool_params}")
+    logger.info(f"Invoking tool {tool_name} with parameter keys: {list(tool_params.keys())}")
 
     # Check if tool exists
     if tool_name not in mcp_server.registered_tools:
@@ -247,7 +245,7 @@ async def handle_tool_invocation(mcp_server: MCPServer, request: Dict[str, Any],
                     param_value = int(param_value)
                 valid_params[param_name] = param_value
 
-        logger.info(f"Executing {tool_name} with valid parameters: {valid_params}")
+        logger.info(f"Executing {tool_name} with parameter keys: {list(valid_params.keys())}")
 
         # Call the function with error handling for both direct params and args/kwargs format
         try:
