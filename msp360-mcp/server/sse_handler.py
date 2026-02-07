@@ -61,7 +61,7 @@ class SSEHandler:
                         "protocolVersion": "2024-11-05",
                         "serverInfo": {
                             "name": "MSP360 MCP Server",
-                            "version": "0.1.0"
+                            "version": "1.1.0"
                         },
                         "capabilities": {
                             "tools": {

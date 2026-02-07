@@ -2,22 +2,26 @@
 
 MCP server for MSP360/CloudBerry API.
 
+## Quick Install
+
+> **Note:** After clicking the badge, update the environment variables `MSP360_API_LOGIN` and `MSP360_API_PASSWORD` with your actual API credentials in the MCP server settings.
+
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=MSP360&config=eyJjb21tYW5kIjoiZG9ja2VyIiwiYXJncyI6WyJydW4iLCItaSIsIi0tcm0iLCItZSIsIk1TUDM2MF9BUElfTE9HSU49WU9VUl9BUElfTE9HSU4iLCItZSIsIk1TUDM2MF9BUElfUEFTU1dPUkQ9WU9VUl9BUElfUEFTU1dPUkQiLCItZSIsIkFQSV9USU1FT1VUPTYwIiwidG9ueXpvcmluL21zcDM2MC1tY3A6bGF0ZXN0Il19)
+
+[![Install in Claude](https://img.shields.io/badge/Claude_Desktop-Install_Server-D97757?style=flat-square&logo=claude&logoColor=white)](#claude-desktop)
+
 ## Features
 
-- FastAPI-based RESTful API for MSP360/CloudBerry
+- MCP server for managing MSP360/CloudBerry backup infrastructure
 - Endpoints for users, packages, companies, and backup operations
-- Docker-based MCP server integration with Cursor IDE
+- Docker-based, works with Cursor IDE and Claude Desktop
 
 ## Requirements
 
 - Docker
-- Cursor IDE
-
 
 ## Example
 ![MSP360 MCP Demo](images/msp360-mcp-demo.png)
-
-
 
 ## Getting Started
 
@@ -27,22 +31,13 @@ MCP server for MSP360/CloudBerry API.
 docker pull tonyzorin/msp360-mcp:latest
 ```
 
-## Using with Cursor (MCP)
+## Cursor
 
-### Configuration
+Use the one-click badge above, or configure manually:
 
-**For global settings update:**
+**For global settings** — `~/.cursor/mcp.json`
 
-```
-/Users/%username%/.cursor/mcp.json
-```
-
-**For a specific project update:**
-```
-%project_root%/.cursor/mcp.json
-```
-
-An example configuration file is provided in the repository as `mcp.json.example`. You can copy this file to your Cursor configuration location and update it with your API credentials:
+**For a specific project** — `<project_root>/.cursor/mcp.json`
 
 ```json
 {
@@ -56,8 +51,7 @@ An example configuration file is provided in the repository as `mcp.json.example
         "-e", "MSP360_API_LOGIN=<YOUR_API_LOGIN>",
         "-e", "MSP360_API_PASSWORD=<YOUR_API_PASSWORD>",
         "-e", "API_TIMEOUT=60",
-        "tonyzorin/msp360-mcp:latest",
-        
+        "tonyzorin/msp360-mcp:latest"
       ]
     }
   }
@@ -67,10 +61,8 @@ An example configuration file is provided in the repository as `mcp.json.example
 ## Claude Desktop
 
 1. Open Claude Desktop
-2. Click on Settings
-3. Developer tab -> Edit Config
-4. Add MCP server to you claude_desktop.config.json 
-
+2. Settings -> Developer -> Edit Config
+3. Add to `claude_desktop_config.json`:
 
 ```json
 {
@@ -84,23 +76,19 @@ An example configuration file is provided in the repository as `mcp.json.example
         "-e", "MSP360_API_LOGIN=<YOUR_API_LOGIN>",
         "-e", "MSP360_API_PASSWORD=<YOUR_API_PASSWORD>",
         "-e", "API_TIMEOUT=60",
-        "tonyzorin/msp360-mcp:latest",
-        
+        "tonyzorin/msp360-mcp:latest"
       ]
     }
   }
 }
 ```
 
-## Alternative approach
-
-
-**Clone the repository**
+## Build from Source
 
 ```bash
 git clone https://github.com/tonyzorin/msp360-mcp.git
 cd msp360-mcp
-docker build -t tonyzorin/msp360-mcp:1.0.0 .
+docker build -t tonyzorin/msp360-mcp:1.1.0 .
 ```
 
 
