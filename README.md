@@ -289,4 +289,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 
 ## More info
-[![Check vendor page]([https://img.shields.io/badge/Claude_Desktop-Install_Server-D97757?style=flat-square&logo=claude&logoColor=white](https://www.msp360.com/msp-software/))]
+[Check vendor page](https://www.msp360.com/msp-software/)
