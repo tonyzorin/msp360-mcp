@@ -27,3 +27,9 @@ python3 scripts/verify_mcpb_version.py
 ```
 
 Requires Docker image `tonyzorin/msp360-mcp:<version>` on the user's machine (tag must match `msp360-mcp/core/version.py`).
+
+After a release, update the Docker Hub page:
+
+```bash
+python3 scripts/update_dockerhub_overview.py
+```
