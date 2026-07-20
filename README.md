@@ -8,7 +8,7 @@ Connect Cursor, Claude Desktop, or any STDIO MCP client to MSP360 APIs — list 
 
 ### Quick add
 
-[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=MSP360&config=eyJjb21tYW5kIjoiZG9ja2VyIiwiYXJncyI6WyJydW4iLCItaSIsIi1lIiwiTVNQMzYwX0FQSV9MT0dJTj1ZT1VSX0FQSV9MT0dJTiIsIi1lIiwiTVNQMzYwX0FQSV9QQVNTV09SRD1ZT1VSX0FQSV9QQVNTV09SRCIsIi1lIiwiTVNQMzYwX1JNTV9BUElfVE9LRU49WU9VUl9STU1fVE9LRU4iLCItZSIsIkFQSV9USU1FT1VUPTYwIiwidG9ueXpvcmluL21zcDM2MC1tY3A6Mi4yLjAiXX0%3D)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=MSP360&config=eyJjb21tYW5kIjoiZG9ja2VyIiwiYXJncyI6WyJydW4iLCItaSIsIi1lIiwiTVNQMzYwX0FQSV9MT0dJTj1ZT1VSX0FQSV9MT0dJTiIsIi1lIiwiTVNQMzYwX0FQSV9QQVNTV09SRD1ZT1VSX0FQSV9QQVNTV09SRCIsIi1lIiwiTVNQMzYwX1JNTV9BUElfVE9LRU49WU9VUl9STU1fVE9LRU4iLCItZSIsIkFQSV9USU1FT1VUPTYwIiwidG9ueXpvcmluL21zcDM2MC1tY3A6Mi4yLjEiXX0%3D)
 [![Install in Claude Desktop](https://img.shields.io/badge/Install_in-Claude_Desktop-191919?style=for-the-badge&logo=anthropic&logoColor=white)](https://github.com/tonyzorin/msp360-mcp/raw/main/mcpb/msp360-mcp.mcpb)
 
 | Host | Install path |
@@ -55,7 +55,7 @@ Both hosts use the same Docker STDIO pattern.
 
 ### Cursor
 
-1. Click **Install in Cursor** above (or open the [install link](https://cursor.com/en/install-mcp?name=MSP360&config=eyJjb21tYW5kIjoiZG9ja2VyIiwiYXJncyI6WyJydW4iLCItaSIsIi1lIiwiTVNQMzYwX0FQSV9MT0dJTj1ZT1VSX0FQSV9MT0dJTiIsIi1lIiwiTVNQMzYwX0FQSV9QQVNTV09SRD1ZT1VSX0FQSV9QQVNTV09SRCIsIi1lIiwiTVNQMzYwX1JNTV9BUElfVE9LRU49WU9VUl9STU1fVE9LRU4iLCItZSIsIkFQSV9USU1FT1VUPTYwIiwidG9ueXpvcmluL21zcDM2MC1tY3A6Mi4yLjAiXX0%3D)).
+1. Click **Install in Cursor** above (or open the [install link](https://cursor.com/en/install-mcp?name=MSP360&config=eyJjb21tYW5kIjoiZG9ja2VyIiwiYXJncyI6WyJydW4iLCItaSIsIi1lIiwiTVNQMzYwX0FQSV9MT0dJTj1ZT1VSX0FQSV9MT0dJTiIsIi1lIiwiTVNQMzYwX0FQSV9QQVNTV09SRD1ZT1VSX0FQSV9QQVNTV09SRCIsIi1lIiwiTVNQMzYwX1JNTV9BUElfVE9LRU49WU9VUl9STU1fVE9LRU4iLCItZSIsIkFQSV9USU1FT1VUPTYwIiwidG9ueXpvcmluL21zcDM2MC1tY3A6Mi4yLjEiXX0%3D)).
 2. Confirm the install prompt in Cursor.
 3. Edit the saved MCP entry and replace the credential placeholders.
 4. Ensure the image is available (`docker pull tonyzorin/msp360-mcp:2.2.1`), then reload MCP / restart Cursor.
