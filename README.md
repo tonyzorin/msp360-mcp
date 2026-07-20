@@ -6,7 +6,7 @@ Connect Cursor, Claude Desktop, or any STDIO MCP client to MSP360 APIs — list 
 
 **Vendor:** [MSP360](https://www.msp360.com/) — Managed Backup and RMM platform this server integrates with.
 
-**Current image:** `tonyzorin/msp360-mcp:2.2.1`
+**Current image:** `tonyzorin/msp360-mcp:2.2.2`
 
 ### Quick add
 
@@ -18,7 +18,7 @@ Connect Cursor, Claude Desktop, or any STDIO MCP client to MSP360 APIs — list 
 | **Cursor** | One-click deeplink above → Docker STDIO prefilled ([install-link docs](https://cursor.com/docs/mcp/install-links)) |
 | **Claude Desktop** | Downloads [`msp360-mcp.mcpb`](https://github.com/tonyzorin/msp360-mcp/raw/main/mcpb/msp360-mcp.mcpb) — open/double-click to install as a [Desktop Extension](https://support.claude.com/en/articles/10949351-getting-started-with-local-mcp-servers-on-claude-desktop), then enter API credentials in the install UI |
 
-**Before either install:** `docker pull tonyzorin/msp360-mcp:2.2.1` (Docker must be running).
+**Before either install:** `docker pull tonyzorin/msp360-mcp:2.2.2` (Docker must be running).
 
 ---
 
@@ -38,7 +38,7 @@ You can set either credential set alone. The server starts and registers only th
 ### Option A — Pull the published image
 
 ```bash
-docker pull tonyzorin/msp360-mcp:2.2.1
+docker pull tonyzorin/msp360-mcp:2.2.2
 ```
 
 ### Option B — Build from this repo
@@ -46,7 +46,7 @@ docker pull tonyzorin/msp360-mcp:2.2.1
 ```bash
 git clone https://github.com/tonyzorin/msp360-mcp.git
 cd msp360-mcp
-docker build -t tonyzorin/msp360-mcp:2.2.1 .
+docker build -t tonyzorin/msp360-mcp:2.2.2 .
 ```
 
 ---
@@ -60,7 +60,7 @@ Both hosts use the same Docker STDIO pattern.
 1. Click **Install in Cursor** above (or open the [install link](https://cursor.com/en/install-mcp?name=MSP360&config=eyJjb21tYW5kIjoiZG9ja2VyIiwiYXJncyI6WyJydW4iLCItaSIsIi1lIiwiTVNQMzYwX0FQSV9MT0dJTj1ZT1VSX0FQSV9MT0dJTiIsIi1lIiwiTVNQMzYwX0FQSV9QQVNTV09SRD1ZT1VSX0FQSV9QQVNTV09SRCIsIi1lIiwiTVNQMzYwX1JNTV9BUElfVE9LRU49WU9VUl9STU1fVE9LRU4iLCItZSIsIkFQSV9USU1FT1VUPTYwIiwidG9ueXpvcmluL21zcDM2MC1tY3A6Mi4yLjEiXX0%3D)).
 2. Confirm the install prompt in Cursor.
 3. Edit the saved MCP entry and replace the credential placeholders.
-4. Ensure the image is available (`docker pull tonyzorin/msp360-mcp:2.2.1`), then reload MCP / restart Cursor.
+4. Ensure the image is available (`docker pull tonyzorin/msp360-mcp:2.2.2`), then reload MCP / restart Cursor.
 
 Manual alternative: project `.cursor/mcp.json` or global Cursor MCP settings — same JSON as [`mcp.json.example`](mcp.json.example).
 
@@ -70,11 +70,13 @@ Manual alternative: project `.cursor/mcp.json` or global Cursor MCP settings —
 
 **Recommended — Desktop Extension (one-click):**
 
-1. `docker pull tonyzorin/msp360-mcp:2.2.1`
+1. `docker pull tonyzorin/msp360-mcp:2.2.2`
 2. Click **Install in Claude Desktop** above (or download [`mcpb/msp360-mcp.mcpb`](mcpb/msp360-mcp.mcpb)).
 3. Open the downloaded `.mcpb` file (double-click, or drag into Claude Desktop, or Settings → Extensions → Advanced → Install Extension…).
 4. Enter **API Login**, **API Password**, and optional **RMM Token** in the install UI.
 5. Confirm install, then ask for `mcp_server_info` in a new chat.
+
+Sideloaded `.mcpb` installs show Anthropic's **unverified developer** warning until the extension is [approved in the Connectors Directory](https://claude.com/docs/connectors/building/submission). See [`docs/connectors-submission.md`](docs/connectors-submission.md).
 
 See Anthropic’s [local MCP / Desktop Extensions guide](https://support.claude.com/en/articles/10949351-getting-started-with-local-mcp-servers-on-claude-desktop).
 
@@ -166,7 +168,7 @@ docker run --rm -p 51817:51817 \
   -e MCP_TRANSPORT=http \
   -e MSP360_API_LOGIN=YOUR_API_LOGIN \
   -e MSP360_API_PASSWORD=YOUR_API_PASSWORD \
-  tonyzorin/msp360-mcp:2.2.1
+  tonyzorin/msp360-mcp:2.2.2
 ```
 
 ---
@@ -180,27 +182,27 @@ The rest of this README uses **Docker** to run MCP (Cursor, Claude Desktop, prod
 ```bash
 git clone https://github.com/tonyzorin/msp360-mcp.git
 cd msp360-mcp
-docker build -t tonyzorin/msp360-mcp:2.2.1 .
+docker build -t tonyzorin/msp360-mcp:2.2.2 .
 
 # Run unit/smoke tests
-docker run --rm --entrypoint python tonyzorin/msp360-mcp:2.2.1 -m pytest test_mcp_v2.py
+docker run --rm --entrypoint python tonyzorin/msp360-mcp:2.2.2 -m pytest test_mcp_v2.py
 
 # Run the server (STDIO — same as MCP hosts; use --debug for verbose logs)
 docker run --rm -i \
   -e MSP360_API_LOGIN=YOUR_API_LOGIN \
   -e MSP360_API_PASSWORD=YOUR_API_PASSWORD \
   -e MSP360_RMM_API_TOKEN=YOUR_RMM_TOKEN \
-  tonyzorin/msp360-mcp:2.2.1 --debug
+  tonyzorin/msp360-mcp:2.2.2 --debug
 
 # Live code mount while editing (rebuild not needed for Python changes)
 docker run --rm -i \
   -v "$(pwd)/msp360-mcp:/app/msp360-mcp" \
   -e MSP360_API_LOGIN=YOUR_API_LOGIN \
   -e MSP360_API_PASSWORD=YOUR_API_PASSWORD \
-  tonyzorin/msp360-mcp:2.2.1 --debug
+  tonyzorin/msp360-mcp:2.2.2 --debug
 ```
 
-Point Cursor or Claude Desktop at the locally built image tag (`tonyzorin/msp360-mcp:2.2.1`) instead of pulling.
+Point Cursor or Claude Desktop at the locally built image tag (`tonyzorin/msp360-mcp:2.2.2`) instead of pulling.
 
 ### Optional — native Python
 
@@ -232,6 +234,7 @@ Requires **Python 3.14** (same as the Docker image).
 | `2.0.0` | FastMCP rewrite, full Backup RM, read-only RMM |
 | `2.2.0` | Semantic tool descriptions, routing instructions, MCP Apps MVP |
 | `2.2.1` | Admin write, storage limit packages CRUD, builds download, usage/issue report helpers |
+| `2.2.2` | Connectors Directory prep — tool annotations, privacy docs, extension icon |
 
 **2.0 → 2.2 renames:** `get_user_computers` → `backup_rm_list_user_computers`; `get_monitoring_item` → `backup_rm_get_monitoring_item`.
 
@@ -251,7 +254,7 @@ Requires **Python 3.14** (same as the Docker image).
 
 ## All MCP tools
 
-Full catalog for **v2.2.1**. Which tools register depends on your credentials — call `mcp_server_info` first.
+Full catalog for **v2.2.2**. Which tools register depends on your credentials — call `mcp_server_info` first.
 
 | Credential | Tools |
 |------------|-------|
@@ -409,3 +412,36 @@ Packages API = **storage limits**, not agent installers.
 ## License
 
 See [LICENSE](LICENSE).
+
+---
+
+## Privacy Policy
+
+This MCP connector runs **locally on your machine** via Docker. It connects Claude Desktop to **MSP360 Managed Backup** and **read-only RMM** APIs using credentials you provide at install time.
+
+### Data collection
+
+- **Credentials** (API login, password, optional RMM token) are stored in the Claude Desktop extension install UI / OS keychain — not in this Git repository.
+- **API requests** go from your machine to MSP360 endpoints (`api.mspbackups.com`, `api.rmm.mspbackups.com`) to fulfill tool calls.
+- **No telemetry** is sent to the extension author. Standard Claude Desktop chat flow may send tool inputs/outputs to Anthropic per your Claude account terms.
+
+### Data usage and storage
+
+- Backup and RMM data returned by tools is shown in your Claude session only.
+- The connector does not persist MSP360 customer data to disk beyond what Docker/Claude Desktop cache for normal operation.
+
+### Third-party sharing
+
+- **MSP360 / CloudBerry Lab** — API provider for backup and RMM data ([privacy policy](https://www.msp360.com/privacy-policy/)).
+- **Anthropic** — Claude Desktop host; tool results may be included in conversations per Anthropic's policies.
+
+### Data retention
+
+- Retention follows your MSP360 tenant settings and Claude Desktop data policies. Uninstall the extension and remove MCP config to stop local credential use.
+
+### Contact
+
+- Extension issues: [GitHub Issues](https://github.com/tonyzorin/msp360-mcp/issues)
+- MSP360 product privacy: [https://www.msp360.com/privacy-policy/](https://www.msp360.com/privacy-policy/)
+
+Official directory submission: [Anthropic Connectors Directory requirements](https://claude.com/docs/connectors/building/submission). See [`docs/connectors-submission.md`](docs/connectors-submission.md) for reviewer setup.

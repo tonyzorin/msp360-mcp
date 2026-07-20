@@ -6,7 +6,7 @@ Connect **Cursor**, **Claude Desktop**, or any STDIO MCP client to MSP360 APIs â
 
 **Vendor:** [MSP360](https://www.msp360.com/) â€” Managed Backup and RMM platform this server integrates with.
 
-**Current tags:** `2.2.1`, `latest`  
+**Current tags:** `2.2.2`, `latest`  
 **Source:** https://github.com/tonyzorin/msp360-mcp
 
 ---
@@ -14,7 +14,7 @@ Connect **Cursor**, **Claude Desktop**, or any STDIO MCP client to MSP360 APIs â
 ## Quick start
 
 ```bash
-docker pull tonyzorin/msp360-mcp:2.2.1
+docker pull tonyzorin/msp360-mcp:2.2.2
 ```
 
 ### Cursor / Claude Desktop (STDIO)
@@ -33,7 +33,7 @@ Use the same Docker pattern in your MCP config (`mcp.json` or Claude Desktop ext
         "-e", "MSP360_API_PASSWORD=YOUR_API_PASSWORD",
         "-e", "MSP360_RMM_API_TOKEN=YOUR_RMM_TOKEN",
         "-e", "API_TIMEOUT=60",
-        "tonyzorin/msp360-mcp:2.2.1"
+        "tonyzorin/msp360-mcp:2.2.2"
       ]
     }
   }
@@ -76,7 +76,7 @@ docker run --rm -p 51817:51817 \
   -e MCP_TRANSPORT=http \
   -e MSP360_API_LOGIN=YOUR_API_LOGIN \
   -e MSP360_API_PASSWORD=YOUR_API_PASSWORD \
-  tonyzorin/msp360-mcp:2.2.1
+  tonyzorin/msp360-mcp:2.2.2
 ```
 
 ---
@@ -113,10 +113,11 @@ Full tool catalog: https://github.com/tonyzorin/msp360-mcp#all-mcp-tools
 
 | Tag | Notes |
 |-----|--------|
-| `2.2.1` | Current release â€” admin write, packages CRUD, builds download, usage/issue helpers |
+| `2.2.2` | Current â€” Connectors Directory prep (tool annotations, privacy, icon) |
+| `2.2.1` | Admin write, packages CRUD, builds download, usage helpers |
 | `2.2.0` | Semantic tool descriptions, MCP Apps MVP |
 | `2.0.0` | FastMCP rewrite, full Backup RM, read-only RMM |
-| `latest` | Points to current stable (`2.2.1`) |
+| `latest` | Points to current stable (`2.2.2`) |
 
 ---
 
@@ -125,8 +126,8 @@ Full tool catalog: https://github.com/tonyzorin/msp360-mcp#all-mcp-tools
 ```bash
 git clone https://github.com/tonyzorin/msp360-mcp.git
 cd msp360-mcp
-docker build -t tonyzorin/msp360-mcp:2.2.1 .
-docker run --rm --entrypoint python tonyzorin/msp360-mcp:2.2.1 -m pytest test_mcp_v2.py
+docker build -t tonyzorin/msp360-mcp:2.2.2 .
+docker run --rm --entrypoint python tonyzorin/msp360-mcp:2.2.2 -m pytest test_mcp_v2.py
 ```
 
 ---

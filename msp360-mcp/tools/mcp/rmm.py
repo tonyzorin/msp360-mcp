@@ -7,6 +7,7 @@ from fastmcp.apps import AppConfig
 from apps.templates import RMM_FLEET_URI
 from services.msp360 import get_rmm_client
 from services.msp360.rmm_client import RMM_STAT_TYPES
+from tools.mcp.tool_decorators import readonly
 
 RMMStatType = Literal[
     "antivirus",
@@ -30,7 +31,7 @@ RMM_FLEET_APP = AppConfig(resource_uri=RMM_FLEET_URI)
 
 
 def register_rmm_tools(mcp: FastMCP) -> None:
-    @mcp.tool
+    @readonly(mcp, "Get RMM Computer Stat")
     async def rmm_get_computer_stat(
         hid: str,
         stat_type: RMMStatType,
@@ -46,7 +47,7 @@ def register_rmm_tools(mcp: FastMCP) -> None:
             hid, stat_type, mbs_stage_key=mbs_stage_key
         )
 
-    @mcp.tool
+    @readonly(mcp, "Get RMM Fleet Stat")
     async def rmm_get_computers_stat(
         stat_type: RMMStatType,
         page_number: int = 1,
@@ -66,7 +67,7 @@ def register_rmm_tools(mcp: FastMCP) -> None:
             mbs_stage_key=mbs_stage_key,
         )
 
-    @mcp.tool
+    @readonly(mcp, "List RMM Stat Types")
     async def rmm_list_stat_types() -> list[str]:
         """[RMM read-only] List valid stat_type values for RMM stat tools.
 
@@ -76,7 +77,7 @@ def register_rmm_tools(mcp: FastMCP) -> None:
         """
         return list(RMM_STAT_TYPES)
 
-    @mcp.tool(app=RMM_FLEET_APP)
+    @readonly(mcp, "RMM Fleet Overview", app=RMM_FLEET_APP)
     async def rmm_fleet_overview(
         page_number: int = 1,
         page_size: int = 10,

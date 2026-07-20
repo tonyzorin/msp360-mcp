@@ -7,6 +7,7 @@ from fastmcp.apps import AppConfig
 from apps.templates import BACKUP_MONITORING_URI
 from services.msp360 import get_mbs_client
 from tools.mcp.helpers import parse_json_object
+from tools.mcp.tool_decorators import readonly, write
 from tools.mcp.reports import (
     computers_without_success,
     extract_list,
@@ -19,7 +20,7 @@ BACKUP_MONITORING_APP = AppConfig(resource_uri=BACKUP_MONITORING_URI)
 
 
 def register_backup_rm_tools(mcp: FastMCP) -> None:
-    @mcp.tool
+    @readonly(mcp, "List Backup Computers")
     async def backup_rm_list_computers(
         offset: int = 0,
         count: int = 10,
@@ -43,7 +44,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
             online=online,
         )
 
-    @mcp.tool
+    @readonly(mcp, "Get Backup Computer")
     async def backup_rm_get_computer(hid: str) -> Any:
         """[Backup RM] Get one managed computer by hardware ID (hid).
 
@@ -53,7 +54,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_computer(hid)
 
-    @mcp.tool
+    @readonly(mcp, "Get Computer Disks")
     async def backup_rm_get_computer_disks(hid: str) -> Any:
         """[Backup RM] Get disk layout/volumes for a managed computer.
 
@@ -63,7 +64,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_computer_disks(hid)
 
-    @mcp.tool
+    @readonly(mcp, "List Computer Plans")
     async def backup_rm_list_plans(hid: str) -> Any:
         """[Backup RM] List backup/restore plans on a computer.
 
@@ -73,7 +74,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_computer_plans(hid)
 
-    @mcp.tool
+    @write(mcp, "Create Backup Plan")
     async def backup_rm_create_plan(hid: str, plan_data_json: str) -> Any:
         """[Backup RM] Create a backup plan on a computer (mutating).
 
@@ -84,7 +85,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         plan_data = parse_json_object(plan_data_json, "plan_data_json")
         return await get_mbs_client().create_computer_plan(hid, plan_data)
 
-    @mcp.tool
+    @readonly(mcp, "Get Backup Plan")
     async def backup_rm_get_plan(hid: str, plan_id: str) -> Any:
         """[Backup RM] Get one plan definition on a computer.
 
@@ -94,7 +95,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_computer_plan(hid, plan_id)
 
-    @mcp.tool
+    @write(mcp, "Update Backup Plan")
     async def backup_rm_update_plan(
         hid: str, plan_id: str, plan_data_json: str
     ) -> Any:
@@ -107,7 +108,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         plan_data = parse_json_object(plan_data_json, "plan_data_json")
         return await get_mbs_client().update_computer_plan(hid, plan_id, plan_data)
 
-    @mcp.tool
+    @write(mcp, "Delete Backup Plan")
     async def backup_rm_delete_plan(hid: str, plan_id: str) -> Any:
         """[Backup RM] Delete a plan from a computer (mutating).
 
@@ -117,7 +118,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().delete_computer_plan(hid, plan_id)
 
-    @mcp.tool
+    @readonly(mcp, "Get Plan Info")
     async def backup_rm_get_plan_info(hid: str, plan_id: str) -> Any:
         """[Backup RM] Get extended metadata for a computer plan.
 
@@ -127,7 +128,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_computer_plan_info(hid, plan_id)
 
-    @mcp.tool
+    @write(mcp, "Start Backup Plan")
     async def backup_rm_start_plan(
         hid: str, plan_id: str, mode: Optional[str] = None
     ) -> Any:
@@ -139,7 +140,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().start_computer_plan(hid, plan_id, mode=mode)
 
-    @mcp.tool
+    @write(mcp, "Stop Backup Plan")
     async def backup_rm_stop_plan(
         hid: str, plan_id: str, force: Optional[bool] = None
     ) -> Any:
@@ -151,7 +152,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().stop_computer_plan(hid, plan_id, force=force)
 
-    @mcp.tool
+    @readonly(mcp, "Global Plans History")
     async def backup_rm_plans_history(offset: int = 0, count: int = 10) -> Any:
         """[Backup RM] Get global backup plan run history (paginated).
 
@@ -161,7 +162,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_plans_history(offset, count)
 
-    @mcp.tool
+    @readonly(mcp, "Computer Plans History")
     async def backup_rm_computer_plans_history(
         hid: str, offset: int = 0, count: int = 10
     ) -> Any:
@@ -173,7 +174,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_computer_plans_history(hid, offset, count)
 
-    @mcp.tool
+    @readonly(mcp, "Plan Run History")
     async def backup_rm_plan_history(hid: str, plan_id: str) -> Any:
         """[Backup RM] Get run history for one plan on one computer.
 
@@ -183,7 +184,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_computer_plan_history(hid, plan_id)
 
-    @mcp.tool
+    @write(mcp, "Update Computer Authorization")
     async def backup_rm_update_authorization(
         hid: str, auth_data_json: str = "{}"
     ) -> Any:
@@ -196,7 +197,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         auth_data = parse_json_object(auth_data_json, "auth_data_json")
         return await get_mbs_client().update_computer_authorization(hid, auth_data)
 
-    @mcp.tool
+    @write(mcp, "Remove Computer Authorization")
     async def backup_rm_remove_authorization(hid: str) -> Any:
         """[Backup RM] Remove authorization from a computer (mutating).
 
@@ -206,7 +207,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().remove_computer_authorization(hid)
 
-    @mcp.tool
+    @readonly(mcp, "Get Backup Statistics")
     async def backup_rm_get_statistics(hid: str) -> Any:
         """[Backup RM] Get backup statistics for one computer.
 
@@ -216,7 +217,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_computer_statistics(hid)
 
-    @mcp.tool
+    @readonly(mcp, "Get Computer Usage")
     async def backup_rm_get_usage(hid: str) -> Any:
         """[Backup RM] Get storage/usage information for one computer.
 
@@ -226,7 +227,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_computer_usage(hid)
 
-    @mcp.tool(app=BACKUP_MONITORING_APP)
+    @readonly(mcp, "Backup Monitoring Dashboard", app=BACKUP_MONITORING_APP)
     async def backup_rm_get_monitoring(
         page: int = 1,
         limit: int = 10,
@@ -250,7 +251,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
             params["status"] = status
         return await get_mbs_client().get_monitoring(params)
 
-    @mcp.tool
+    @readonly(mcp, "User Backup Monitoring")
     async def backup_rm_get_monitoring_for_user(
         user_id: str, page: int = 1, limit: int = 10
     ) -> Any:
@@ -264,7 +265,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
             user_id, {"page": page, "limit": limit}
         )
 
-    @mcp.tool
+    @readonly(mcp, "Get Monitoring Item")
     async def backup_rm_get_monitoring_item(item_id: str) -> Any:
         """[Backup RM] Get one backup monitoring/history item by ID.
 
@@ -274,7 +275,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_monitoring_item(item_id)
 
-    @mcp.tool
+    @readonly(mcp, "List User Computers")
     async def backup_rm_list_user_computers(
         user_id: str, page: int = 1, limit: int = 10
     ) -> Any:
@@ -288,7 +289,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
             user_id, {"page": page, "limit": limit}
         )
 
-    @mcp.tool
+    @readonly(mcp, "List Backup Issues")
     async def backup_rm_list_issues(
         company_id: Optional[str] = None,
         status: Optional[str] = None,
@@ -334,7 +335,7 @@ def register_backup_rm_tools(mcp: FastMCP) -> None:
             "grouped": grouped,
         }
 
-    @mcp.tool
+    @readonly(mcp, "Computers Without Success")
     async def backup_rm_computers_without_success(
         company_id: Optional[str] = None,
         max_pages: int = 5,

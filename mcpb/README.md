@@ -7,6 +7,7 @@ This folder builds the one-click **Install in Claude Desktop** package.
 | File | Purpose |
 |------|---------|
 | `manifest.json` | Extension metadata + Docker `mcp_config` + user credential prompts |
+| `icon.png` | Extension icon (512×512+, referenced in manifest) |
 | `server/stub` | Schema placeholder (`mcp_config.command` is `docker`) |
 | `msp360-mcp.mcpb` | Packed bundle (commit after rebuild) |
 

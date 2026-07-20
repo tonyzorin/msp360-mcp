@@ -6,10 +6,11 @@ from fastmcp import FastMCP
 from core.version import SERVER_VERSION
 from services.msp360 import get_mbs_client
 from tools.mcp.helpers import parse_json_object, pagination_params
+from tools.mcp.tool_decorators import readonly, write
 
 
 def register_info_tool(mcp: FastMCP) -> None:
-    @mcp.tool
+    @readonly(mcp, "Server Info")
     async def mcp_server_info() -> dict:
         """[Meta] Report MSP360 MCP version and which API surfaces are configured.
 
@@ -30,7 +31,7 @@ def register_info_tool(mcp: FastMCP) -> None:
 
 
 def register_mbs_tools(mcp: FastMCP) -> None:
-    @mcp.tool
+    @readonly(mcp, "List Users")
     async def get_users(page: int = 1, limit: int = 10) -> Any:
         """[MBS] List Managed Backup users (paginated).
 
@@ -40,7 +41,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_users(pagination_params(page, limit))
 
-    @mcp.tool
+    @readonly(mcp, "Get User")
     async def get_user(user_id: str) -> Any:
         """[MBS] Get one Managed Backup user by ID.
 
@@ -50,7 +51,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_user(user_id)
 
-    @mcp.tool
+    @write(mcp, "Create User")
     async def create_user(user_data_json: str) -> Any:
         """[MBS] Create a Managed Backup user (mutating).
 
@@ -62,7 +63,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(user_data_json, "user_data_json")
         )
 
-    @mcp.tool
+    @write(mcp, "Update User")
     async def update_user(user_data_json: str) -> Any:
         """[MBS] Update a Managed Backup user (mutating).
 
@@ -74,7 +75,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(user_data_json, "user_data_json")
         )
 
-    @mcp.tool
+    @write(mcp, "Delete User")
     async def delete_user(user_id: str) -> Any:
         """[MBS] Delete a Managed Backup user (mutating).
 
@@ -84,7 +85,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().delete_user(user_id)
 
-    @mcp.tool
+    @readonly(mcp, "List Companies")
     async def get_companies(page: int = 1, limit: int = 10) -> Any:
         """[MBS] List companies (paginated).
 
@@ -94,7 +95,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_companies(pagination_params(page, limit))
 
-    @mcp.tool
+    @readonly(mcp, "Get Company")
     async def get_company(company_id: str) -> Any:
         """[MBS] Get one company by ID.
 
@@ -104,7 +105,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_company(company_id)
 
-    @mcp.tool
+    @write(mcp, "Create Company")
     async def create_company(company_data_json: str) -> Any:
         """[MBS] Create a company (mutating).
 
@@ -116,7 +117,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(company_data_json, "company_data_json")
         )
 
-    @mcp.tool
+    @write(mcp, "Update Company")
     async def update_company(company_data_json: str) -> Any:
         """[MBS] Update a company (mutating).
 
@@ -128,7 +129,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(company_data_json, "company_data_json")
         )
 
-    @mcp.tool
+    @write(mcp, "Delete Company")
     async def delete_company(company_id: str) -> Any:
         """[MBS] Delete a company (mutating).
 
@@ -138,7 +139,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().delete_company(company_id)
 
-    @mcp.tool
+    @readonly(mcp, "List Storage Accounts")
     async def get_accounts(page: int = 1, limit: int = 10) -> Any:
         """[MBS] List cloud storage accounts (paginated).
 
@@ -148,7 +149,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_accounts(pagination_params(page, limit))
 
-    @mcp.tool
+    @readonly(mcp, "Get Storage Account")
     async def get_account(account_id: str) -> Any:
         """[MBS] Get one storage account by ID.
 
@@ -158,7 +159,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_account(account_id)
 
-    @mcp.tool
+    @write(mcp, "Create Storage Account")
     async def create_account(account_data_json: str) -> Any:
         """[MBS] Create a storage account (mutating).
 
@@ -170,7 +171,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(account_data_json, "account_data_json")
         )
 
-    @mcp.tool
+    @write(mcp, "Update Storage Account")
     async def update_account(account_data_json: str) -> Any:
         """[MBS] Update a storage account (mutating).
 
@@ -182,7 +183,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(account_data_json, "account_data_json")
         )
 
-    @mcp.tool
+    @readonly(mcp, "List Storage Limits")
     async def get_packages(page: int = 1, limit: int = 10) -> Any:
         """[MBS] List storage limit packages (paginated).
 
@@ -192,7 +193,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_packages(pagination_params(page, limit))
 
-    @mcp.tool
+    @readonly(mcp, "Get Storage Limit")
     async def get_package(package_id: str) -> Any:
         """[MBS] Get one storage limit package by ID.
 
@@ -202,7 +203,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_package(package_id)
 
-    @mcp.tool
+    @write(mcp, "Create Storage Limit")
     async def create_package(package_data_json: str) -> Any:
         """[MBS] Create a storage limit package (mutating).
 
@@ -214,7 +215,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(package_data_json, "package_data_json")
         )
 
-    @mcp.tool
+    @write(mcp, "Update Storage Limit")
     async def update_package(package_data_json: str) -> Any:
         """[MBS] Update a storage limit package (mutating).
 
@@ -226,7 +227,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(package_data_json, "package_data_json")
         )
 
-    @mcp.tool
+    @write(mcp, "Delete Storage Limit")
     async def delete_package(package_id: str) -> Any:
         """[MBS] Delete a storage limit package (mutating).
 
@@ -236,7 +237,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().delete_package(package_id)
 
-    @mcp.tool
+    @readonly(mcp, "List Billing")
     async def get_billing(page: int = 1, limit: int = 10) -> Any:
         """[MBS] List billing records for the current month (paginated).
 
@@ -246,7 +247,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_billing(pagination_params(page, limit))
 
-    @mcp.tool
+    @readonly(mcp, "Get Filtered Billing")
     async def get_billing_filtered(filter_json: str = "{}") -> Any:
         """[MBS] Get filtered billing / storage usage statistics.
 
@@ -273,7 +274,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
 
         return await client.get_filtered_billing(filter_data)
 
-    @mcp.tool
+    @readonly(mcp, "Get Company Storage Usage")
     async def get_company_storage_usage(company_id: str) -> Any:
         """[MBS] Get storage usage for one company (via billing API).
 
@@ -283,7 +284,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_company_storage_usage(company_id)
 
-    @mcp.tool
+    @readonly(mcp, "Storage Usage Report")
     async def storage_usage_report(scope: str, id: str) -> Any:
         """[MBS] Storage usage summary for a company or computer.
 
@@ -311,7 +312,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             return {"scope": "computer", "hid": id, "usage": usage}
         raise ValueError("scope must be 'company' or 'computer'")
 
-    @mcp.tool
+    @readonly(mcp, "List Agent Builds")
     async def get_builds(
         page: int = 1,
         limit: int = 10,
@@ -328,7 +329,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             params["build_type"] = build_type
         return await get_mbs_client().get_builds(params)
 
-    @mcp.tool
+    @write(mcp, "Request Custom Builds")
     async def request_custom_builds(build_data_json: str) -> Any:
         """[MBS] Request custom or sandbox agent builds (mutating).
 
@@ -340,7 +341,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(build_data_json, "build_data_json")
         )
 
-    @mcp.tool
+    @readonly(mcp, "List Agent Versions")
     async def get_available_versions() -> Any:
         """[MBS] List available agent/build version catalog.
 
@@ -350,7 +351,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_available_versions()
 
-    @mcp.tool
+    @readonly(mcp, "List User Destinations")
     async def get_user_destinations(user_email: str) -> Any:
         """[MBS] List backup destinations configured for a user email.
 
@@ -360,7 +361,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_user_destinations(user_email)
 
-    @mcp.tool
+    @write(mcp, "Add User Destination")
     async def add_destination(destination_data_json: str) -> Any:
         """[MBS] Add a backup destination (mutating).
 
@@ -372,7 +373,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(destination_data_json, "destination_data_json")
         )
 
-    @mcp.tool
+    @write(mcp, "Update User Destination")
     async def update_destination(destination_data_json: str) -> Any:
         """[MBS] Update a backup destination (mutating).
 
@@ -384,7 +385,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(destination_data_json, "destination_data_json")
         )
 
-    @mcp.tool
+    @write(mcp, "Delete User Destination")
     async def delete_destination(
         destination_id: str, user_id: Optional[str] = None
     ) -> Any:
@@ -396,7 +397,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().delete_destination(destination_id, user_id)
 
-    @mcp.tool
+    @readonly(mcp, "List Administrators")
     async def get_admins(page: int = 1, limit: int = 10) -> Any:
         """[MBS] List MSP360 portal administrators (paginated).
 
@@ -408,7 +409,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             pagination_params(page, limit)
         )
 
-    @mcp.tool
+    @readonly(mcp, "Get Administrator")
     async def get_admin(admin_id: str) -> Any:
         """[MBS] Get one administrator by ID.
 
@@ -418,7 +419,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_administrator(admin_id)
 
-    @mcp.tool
+    @write(mcp, "Create Administrator")
     async def create_admin(admin_data_json: str) -> Any:
         """[MBS] Create a portal administrator (mutating).
 
@@ -430,7 +431,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(admin_data_json, "admin_data_json")
         )
 
-    @mcp.tool
+    @write(mcp, "Update Administrator")
     async def update_admin(admin_data_json: str) -> Any:
         """[MBS] Update a portal administrator (mutating).
 
@@ -442,7 +443,7 @@ def register_mbs_tools(mcp: FastMCP) -> None:
             parse_json_object(admin_data_json, "admin_data_json")
         )
 
-    @mcp.tool
+    @write(mcp, "Delete Administrator")
     async def delete_admin(admin_id: str) -> Any:
         """[MBS] Delete a portal administrator (mutating).
 

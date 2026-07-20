@@ -4,10 +4,11 @@ from typing import Any, Optional
 from fastmcp import FastMCP
 
 from services.msp360 import get_mbs_client
+from tools.mcp.tool_decorators import readonly, write
 
 
 def register_license_tools(mcp: FastMCP) -> None:
-    @mcp.tool
+    @readonly(mcp, "List Licenses")
     async def get_licenses(
         is_available: Optional[bool] = None,
         page: int = 1,
@@ -36,7 +37,7 @@ def register_license_tools(mcp: FastMCP) -> None:
             status=status,
         )
 
-    @mcp.tool
+    @readonly(mcp, "Get License")
     async def get_license(license_id: str) -> Any:
         """[Licensing] Get one license by ID.
 
@@ -46,7 +47,7 @@ def register_license_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().get_license(license_id)
 
-    @mcp.tool
+    @write(mcp, "Grant License")
     async def grant_license(license_id: str, user_id: str) -> Any:
         """[Licensing] Grant a license to a user (mutating).
 
@@ -56,7 +57,7 @@ def register_license_tools(mcp: FastMCP) -> None:
         """
         return await get_mbs_client().grant_license(license_id, user_id)
 
-    @mcp.tool
+    @write(mcp, "Release License")
     async def release_license(
         license_id: str,
         user_id: Optional[str] = None,
@@ -72,7 +73,7 @@ def register_license_tools(mcp: FastMCP) -> None:
             license_id, user_id=user_id, computer_id=computer_id
         )
 
-    @mcp.tool
+    @write(mcp, "Revoke License")
     async def revoke_license(
         license_id: str, user_id: Optional[str] = None
     ) -> Any:

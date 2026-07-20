@@ -62,7 +62,7 @@ def _shell(title: str, caption: str, body_html: str, render_js: str) -> str:
     const statusEl = document.getElementById("status");
     {render_js}
 
-    const app = new App({{ name: "msp360", version: "2.2.1" }});
+    const app = new App({{ name: "msp360", version: "2.2.2" }});
     app.ontoolresult = (result) => {{
       statusEl.textContent = "Updated";
       window.renderApp(extractPayload(result));

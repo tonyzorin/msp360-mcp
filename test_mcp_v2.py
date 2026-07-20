@@ -27,7 +27,7 @@ def test_server_starts_without_credentials():
 
     mcp = app_mod.create_mcp_server()
     assert mcp is not None
-    assert app_mod.SERVER_VERSION == "2.2.1"
+    assert app_mod.SERVER_VERSION == "2.2.2"
 
 
 @pytest.mark.asyncio
@@ -177,3 +177,43 @@ def test_packed_mcpb_matches_server_version():
         check=False,
     )
     assert result.returncode == 0, result.stderr or result.stdout
+
+
+@pytest.mark.asyncio
+async def test_all_tools_have_directory_annotations(monkeypatch):
+    """Anthropic Connectors Directory requires title + readOnly/destructive hints."""
+    monkeypatch.setenv("MSP360_API_LOGIN", "reviewer-login")
+    monkeypatch.setenv("MSP360_API_PASSWORD", "reviewer-password")
+    monkeypatch.setenv("MSP360_RMM_API_TOKEN", "reviewer-rmm-token")
+
+    from importlib import reload
+
+    import core.config as config_mod
+    import server.fastmcp_app as app_mod
+
+    reload(config_mod)
+    reload(app_mod)
+
+    mcp = app_mod.create_mcp_server()
+    tools = await mcp.list_tools()
+    assert len(tools) >= 60
+
+    missing: list[str] = []
+    for tool in tools:
+        title = getattr(tool, "title", None)
+        if not title:
+            missing.append(f"{tool.name}: missing title")
+            continue
+        ann = tool.annotations
+        if ann is None:
+            missing.append(f"{tool.name}: missing annotations")
+            continue
+        read_only = ann.readOnlyHint is True
+        destructive = ann.destructiveHint is True
+        if read_only == destructive:
+            missing.append(
+                f"{tool.name}: expected readOnlyHint XOR destructiveHint "
+                f"(got readOnlyHint={ann.readOnlyHint}, destructiveHint={ann.destructiveHint})"
+            )
+
+    assert not missing, "Directory annotation gaps:\n" + "\n".join(missing)
