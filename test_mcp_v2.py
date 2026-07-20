@@ -159,3 +159,21 @@ def test_report_helpers():
     assert "A" in grouped
     assert is_success_status(0)
     assert not is_success_status("Failed")
+
+
+def test_packed_mcpb_matches_server_version():
+    import subprocess
+
+    repo_root = os.path.dirname(__file__)
+    manifest = os.path.join(repo_root, "mcpb", "manifest.json")
+    if not os.path.isfile(manifest):
+        pytest.skip("mcpb/ not present in this environment (Docker runtime image)")
+
+    script = os.path.join(repo_root, "scripts", "verify_mcpb_version.py")
+    result = subprocess.run(
+        [sys.executable, script],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr or result.stdout

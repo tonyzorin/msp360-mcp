@@ -11,6 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY msp360-mcp /app/msp360-mcp
 COPY docs/rmm-openapi.json /app/docs/rmm-openapi.json
+COPY scripts /app/scripts
 COPY test_mcp_v2.py /app/test_mcp_v2.py
 
 STOPSIGNAL SIGTERM

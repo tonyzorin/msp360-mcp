@@ -12,11 +12,18 @@ This folder builds the one-click **Install in Claude Desktop** package.
 
 ## Rebuild
 
+**Important:** Claude Desktop reads version from the **packed** `msp360-mcp.mcpb`, not from `manifest.json` alone. After any version bump, rebuild and commit the binary.
+
 ```bash
+# from repo root
+./scripts/rebuild_mcpb.sh
+# or manually:
 npm install -g @anthropic-ai/mcpb
 cd mcpb
 mcpb validate manifest.json
 mcpb pack . ./msp360-mcp.mcpb
+cd ..
+python3 scripts/verify_mcpb_version.py
 ```
 
-Requires Docker image `tonyzorin/msp360-mcp:2.2.1` on the user's machine.
+Requires Docker image `tonyzorin/msp360-mcp:<version>` on the user's machine (tag must match `msp360-mcp/core/version.py`).

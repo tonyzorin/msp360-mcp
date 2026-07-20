@@ -171,6 +171,39 @@ docker run --rm -p 51817:51817 \
 
 ## Develop from source
 
+The rest of this README uses **Docker** to run MCP (Cursor, Claude Desktop, production-like STDIO). Use the same approach for development — you get Python 3.14 and dependencies without installing them locally.
+
+### Recommended — Docker (matches production)
+
+```bash
+git clone https://github.com/tonyzorin/msp360-mcp.git
+cd msp360-mcp
+docker build -t tonyzorin/msp360-mcp:2.2.1 .
+
+# Run unit/smoke tests
+docker run --rm --entrypoint python tonyzorin/msp360-mcp:2.2.1 -m pytest test_mcp_v2.py
+
+# Run the server (STDIO — same as MCP hosts; use --debug for verbose logs)
+docker run --rm -i \
+  -e MSP360_API_LOGIN=YOUR_API_LOGIN \
+  -e MSP360_API_PASSWORD=YOUR_API_PASSWORD \
+  -e MSP360_RMM_API_TOKEN=YOUR_RMM_TOKEN \
+  tonyzorin/msp360-mcp:2.2.1 --debug
+
+# Live code mount while editing (rebuild not needed for Python changes)
+docker run --rm -i \
+  -v "$(pwd)/msp360-mcp:/app/msp360-mcp" \
+  -e MSP360_API_LOGIN=YOUR_API_LOGIN \
+  -e MSP360_API_PASSWORD=YOUR_API_PASSWORD \
+  tonyzorin/msp360-mcp:2.2.1 --debug
+```
+
+Point Cursor or Claude Desktop at the locally built image tag (`tonyzorin/msp360-mcp:2.2.1`) instead of pulling.
+
+### Optional — native Python
+
+Use this only if you already have **Python 3.14** locally and want a faster edit-run loop without Docker:
+
 ```bash
 git clone https://github.com/tonyzorin/msp360-mcp.git
 cd msp360-mcp
