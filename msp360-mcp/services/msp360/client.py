@@ -1,8 +1,6 @@
-"""Main MSP360 API client combining all specialized clients."""
+"""Main MSP360 MBS API client combining all specialized clients."""
 import logging
-from typing import Dict, Any, Optional
 
-from .auth import TokenManager
 from .client_base import MSP360ClientBase
 from .users_client import UsersClient
 from .companies_client import CompaniesClient
@@ -17,35 +15,24 @@ from .licenses_client import LicensesClient
 
 logger = logging.getLogger("msp360_mcp.client")
 
+
 class MSP360Client(
-    UsersClient, 
-    CompaniesClient, 
-    BackupClient, 
+    UsersClient,
+    CompaniesClient,
+    BackupClient,
     PackagesClient,
     AccountsClient,
     BillingClient,
     ComputersClient,
     DestinationsClient,
     AdministratorsClient,
-    LicensesClient
+    LicensesClient,
 ):
-    """
-    Unified client for MSP360 API providing access to all endpoints.
-    
-    This client inherits from all specialized clients, combining their
-    functionality into a single client.
-    """
-    
+    """Unified client for MSP360 Managed Backup API."""
+
     def __init__(self):
-        """Initialize the MSP360 client."""
-        # Initialize the base client (will create the token manager)
         MSP360ClientBase.__init__(self)
-        logger.info("MSP360 Client initialized")
-        
-    def close(self):
-        """Close the client and release resources."""
-        logger.info("Closing MSP360 Client")
-        
+        logger.info("MSP360 MBS client initialized")
+
     def __repr__(self) -> str:
-        """Return string representation of client."""
-        return f"MSP360Client(url={self.base_url})" 
+        return f"MSP360Client(url={self.base_url})"

@@ -1,21 +1,18 @@
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 WORKDIR /app
 
-# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app
 
-# Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
 COPY msp360-mcp /app/msp360-mcp
+COPY docs/rmm-openapi.json /app/docs/rmm-openapi.json
+COPY test_mcp_v2.py /app/test_mcp_v2.py
 
-# Ensure Docker sends SIGTERM on 'docker stop' (default, explicit for clarity)
 STOPSIGNAL SIGTERM
 
-# Default entry point for STDIO mode
 ENTRYPOINT ["python", "msp360-mcp/main.py"]

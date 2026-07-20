@@ -5,12 +5,12 @@
       "args": [
         "run",
         "-i",
-        "--rm",
-        "-e", "MSP360_API_LOGIN=<YOUR_API_LOGIN>",
-        "-e", "MSP360_API_PASSWORD=<YOUR_API_PASSWORD>",
+        "-e", "MSP360_API_LOGIN=YOUR_API_LOGIN",
+        "-e", "MSP360_API_PASSWORD=YOUR_API_PASSWORD",
+        "-e", "MSP360_RMM_API_TOKEN=YOUR_RMM_TOKEN",
         "-e", "API_TIMEOUT=60",
-        "tonyzorin/msp360-mcp:latest",
+        "tonyzorin/msp360-mcp:2.2.1"
       ]
     }
   }
-} 
+}

@@ -1,0 +1,3 @@
+#!/bin/sh
+# Placeholder entry_point for MCPB schema. Claude launches `docker` via mcp_config.
+exit 0

@@ -137,31 +137,31 @@ class AdministratorsClient(MSP360ClientBase):
         logger.info(f"Creating administrator with data: {admin_data}")
         return await self._make_request(method="POST", endpoint="/api/Administrators", json_data=admin_data)
     
-    async def update_administrator(self, admin_id: str, admin_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def update_administrator(self, admin_data: Dict[str, Any]) -> Dict[str, Any]:
         """Update an existing administrator.
-        
+
         Args:
-            admin_id: ID of the administrator to update
-            admin_data: Administrator data to update
-            
+            admin_data: Administrator data to update (must include AdminID)
+
         Returns:
             API response with update result
         """
-        if not admin_id:
-            error_msg = "Missing or empty administrator ID"
-            logger.error(error_msg)
-            return {"error": error_msg}
-            
         if not admin_data:
             error_msg = "Missing or empty administrator data"
             logger.error(error_msg)
             return {"error": error_msg}
-            
+
+        admin_id = admin_data.get("AdminID") or admin_data.get("admin_id")
+        if not admin_id:
+            error_msg = "Missing AdminID in administrator data"
+            logger.error(error_msg)
+            return {"error": error_msg}
+
         logger.info(f"Updating administrator {admin_id} with data: {admin_data}")
         return await self._make_request(
-            method="PUT", 
-            endpoint=f"/api/Administrators/{admin_id}",
-            json_data=admin_data
+            method="PUT",
+            endpoint="/api/Administrators",
+            json_data=admin_data,
         )
     
     async def delete_administrator(self, admin_id: str) -> Dict[str, Any]:

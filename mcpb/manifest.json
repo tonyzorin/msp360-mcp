@@ -1,0 +1,79 @@
+{
+  "manifest_version": "0.3",
+  "name": "msp360-mcp",
+  "display_name": "MSP360 MCP",
+  "version": "2.2.1",
+  "description": "MSP360 Managed Backup and read-only RMM tools for Claude Desktop (Docker).",
+  "long_description": "Connect Claude Desktop to MSP360 Managed Backup (users, licenses, backup remote management, monitoring) and read-only RMM endpoint statistics. Requires Docker Desktop (or Docker Engine) with the image tonyzorin/msp360-mcp:2.2.1 available locally. Enter your MBS API login/password and optional RMM token during install.",
+  "author": {
+    "name": "Anton Zorin",
+    "url": "https://github.com/tonyzorin/msp360-mcp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tonyzorin/msp360-mcp.git"
+  },
+  "homepage": "https://www.msp360.com/",
+  "documentation": "https://github.com/tonyzorin/msp360-mcp#readme",
+  "support": "https://github.com/tonyzorin/msp360-mcp/issues",
+  "server": {
+    "type": "binary",
+    "entry_point": "server/stub",
+    "mcp_config": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "MSP360_API_LOGIN=${user_config.api_login}",
+        "-e",
+        "MSP360_API_PASSWORD=${user_config.api_password}",
+        "-e",
+        "MSP360_RMM_API_TOKEN=${user_config.rmm_token}",
+        "-e",
+        "API_TIMEOUT=60",
+        "tonyzorin/msp360-mcp:2.2.1"
+      ]
+    }
+  },
+  "tools_generated": true,
+  "keywords": [
+    "msp360",
+    "backup",
+    "rmm",
+    "docker",
+    "managed-backup"
+  ],
+  "license": "MIT",
+  "privacy_policies": [
+    "https://www.msp360.com/privacy-policy/"
+  ],
+  "user_config": {
+    "api_login": {
+      "type": "string",
+      "title": "MSP360 API Login",
+      "description": "Managed Backup API login (MSP360_API_LOGIN). Leave empty if you only use RMM.",
+      "sensitive": false,
+      "required": false
+    },
+    "api_password": {
+      "type": "string",
+      "title": "MSP360 API Password",
+      "description": "Managed Backup API password (MSP360_API_PASSWORD).",
+      "sensitive": true,
+      "required": false
+    },
+    "rmm_token": {
+      "type": "string",
+      "title": "RMM API Token",
+      "description": "Optional RMM bearer token (MSP360_RMM_API_TOKEN) for read-only fleet stats.",
+      "sensitive": true,
+      "required": false
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "platforms": ["darwin", "win32", "linux"]
+  }
+}

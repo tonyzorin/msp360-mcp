@@ -61,6 +61,24 @@ class PackagesClient(MSP360ClientBase):
             API response with package data
         """
         return await self._make_request(method="GET", endpoint=f"/api/Packages/{package_id}")
+
+    async def create_package(self, package_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create a storage limit package."""
+        return await self._make_request(
+            method="POST", endpoint="/api/Packages", json_data=package_data
+        )
+
+    async def update_package(self, package_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Update a storage limit package."""
+        return await self._make_request(
+            method="PUT", endpoint="/api/Packages", json_data=package_data
+        )
+
+    async def delete_package(self, package_id: str) -> Dict[str, Any]:
+        """Delete a storage limit package by ID."""
+        return await self._make_request(
+            method="DELETE", endpoint=f"/api/Packages/{package_id}"
+        )
     
     async def get_builds(self, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Get a list of available builds.
@@ -84,9 +102,12 @@ class PackagesClient(MSP360ClientBase):
                 query_params['take'] = limit
                 query_params['skip'] = skip
                 
-            # Add edition filter if provided
             if 'edition' in params:
                 query_params['edition'] = params['edition']
+            if 'build_type' in params:
+                query_params['type'] = params['build_type']
+            elif 'type' in params:
+                query_params['type'] = params['type']
         
         return await self._make_request(method="GET", endpoint="/api/Builds", params=query_params)
     
@@ -99,7 +120,11 @@ class PackagesClient(MSP360ClientBase):
         Returns:
             API response with build request status
         """
-        return await self._make_request(method="POST", endpoint="/api/Builds", json_data=build_data)
+        return await self._make_request(
+            method="POST",
+            endpoint="/api/Builds/RequestCustomBuilds",
+            json_data=build_data,
+        )
     
     async def get_available_versions(self, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Get the latest available versions of builds.

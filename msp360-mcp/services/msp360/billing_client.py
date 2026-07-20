@@ -38,27 +38,57 @@ class BillingClient(MSP360ClientBase):
         return await self._make_request(method="GET", endpoint="/api/Billing", params=query_params)
     
     async def get_filtered_billing(self, filter_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Get filtered billing information.
-        
+        """Get filtered billing information (PUT /api/Billing or /Details).
+
         Args:
-            filter_data: Filter criteria as a dictionary
-            
+            filter_data: Filter criteria — CompanyName/Date for totals, or UserID/Date
+                for per-user details.
+
         Returns:
             API response with filtered billing data
         """
-        # POST is used for complex filtering
-        return await self._make_request(method="POST", endpoint="/api/Billing", json_data=filter_data)
-    
+        payload = {k: v for k, v in filter_data.items() if v is not None}
+
+        user_id = payload.get("UserID") or payload.get("user_id")
+        if user_id:
+            details_payload: Dict[str, Any] = {"UserID": user_id}
+            date_val = payload.get("Date") or payload.get("date")
+            if date_val:
+                details_payload["Date"] = date_val
+            return await self._make_request(
+                method="PUT",
+                endpoint="/api/Billing/Details",
+                json_data=details_payload,
+            )
+
+        billing_payload: Dict[str, Any] = {}
+        company_name = payload.get("CompanyName") or payload.get("company_name")
+        if company_name:
+            billing_payload["CompanyName"] = company_name
+        date_val = payload.get("Date") or payload.get("date")
+        if date_val:
+            billing_payload["Date"] = date_val
+
+        return await self._make_request(
+            method="PUT",
+            endpoint="/api/Billing",
+            json_data=billing_payload,
+        )
+
     async def get_billing_details(self, details_data: Dict[str, Any]) -> Dict[str, Any]:
         """Get detailed billing information for backup/restore operations.
-        
+
         Args:
-            details_data: Filter data for billing details
-            
+            details_data: Filter data with UserID and optional Date
+
         Returns:
             API response with billing details
         """
-        return await self._make_request(method="POST", endpoint="/api/Billing/Details", json_data=details_data)
+        return await self._make_request(
+            method="PUT",
+            endpoint="/api/Billing/Details",
+            json_data=details_data,
+        )
     
     async def get_billing_summary(self, summary_data: Dict[str, Any]) -> Dict[str, Any]:
         """Get billing summary information.

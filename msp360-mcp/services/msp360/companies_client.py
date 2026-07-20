@@ -87,15 +87,34 @@ class CompaniesClient(MSP360ClientBase):
         return await self._make_request(method="DELETE", endpoint=f"/api/Companies/{company_id}")
     
     async def get_company_storage_usage(self, company_id: str) -> Dict[str, Any]:
-        """Get storage usage for a specific company.
-        
+        """Get storage usage for a company via PUT /api/Billing.
+
+        MSP360 does not expose GET /api/Companies/{id}/StorageUsage in the
+        published API. Company storage stats come from billing filtered by name.
+
         Args:
             company_id: ID of the company
-            
+
         Returns:
-            API response with storage usage data
+            BillingModels payload (CurrentSpaceUsed, StatisticBilling, etc.)
         """
-        return await self._make_request(method="GET", endpoint=f"/api/Companies/{company_id}/StorageUsage")
+        company = await self.get_company(company_id)
+        if isinstance(company, dict) and company.get("error"):
+            return company
+
+        company_name = None
+        if isinstance(company, dict):
+            company_name = company.get("Name") or company.get("name")
+        if not company_name:
+            return {
+                "error": f"Could not resolve company name for id {company_id}",
+            }
+
+        return await self._make_request(
+            method="PUT",
+            endpoint="/api/Billing",
+            json_data={"CompanyName": company_name},
+        )
     
     async def get_company_users(self, company_id: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Get users associated with a specific company.
