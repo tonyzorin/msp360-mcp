@@ -4,6 +4,8 @@
 
 Connect **Cursor**, **Claude Desktop**, or any STDIO MCP client to MSP360 APIs — manage users, licenses, backup plans, monitoring, and fleet health through tool calls instead of raw HTTP.
 
+**Vendor:** [MSP360](https://www.msp360.com/) — Managed Backup and RMM platform this server integrates with.
+
 **Current tags:** `2.2.1`, `latest`  
 **Source:** https://github.com/tonyzorin/msp360-mcp
 
@@ -131,6 +133,7 @@ docker run --rm --entrypoint python tonyzorin/msp360-mcp:2.2.1 -m pytest test_mc
 
 ## Links
 
+- **MSP360 (vendor):** https://www.msp360.com/
 - GitHub: https://github.com/tonyzorin/msp360-mcp
 - MBS API docs: https://mspbackups.com/AP/Help/mbs-api-specification/get-started-api
 - RMM Swagger: https://api.rmm.mspbackups.com/swagger/index.html

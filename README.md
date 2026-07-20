@@ -4,6 +4,8 @@
 
 Connect Cursor, Claude Desktop, or any STDIO MCP client to MSP360 APIs — list computers, manage licenses and backup plans, pull monitoring data, and inspect fleet health — through tool calls instead of raw HTTP.
 
+**Vendor:** [MSP360](https://www.msp360.com/) — Managed Backup and RMM platform this server integrates with.
+
 **Current image:** `tonyzorin/msp360-mcp:2.2.1`
 
 ### Quick add
